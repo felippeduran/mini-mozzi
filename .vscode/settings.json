@@ -1,0 +1,6 @@
+{
+    "arduino.path": "/Applications",
+    "arduino.additionalUrls": "",
+    "arduino.logLevel": "verbose",
+    "arduino.enableUSBDetection": true
+}

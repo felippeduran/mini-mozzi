@@ -1,0 +1,7 @@
+{
+    "sketch": "synth.ino",
+    "port": "/dev/cu.usbmodem14411",
+    "board": "arduino:avr:uno",
+    "output": "../build",
+    "debugger": "jlink"
+}

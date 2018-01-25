@@ -1,5 +1,9 @@
+#ifndef Keyboard_h
+#define Keyboard_h
+
 #include <Arduino.h>
 #include <DigitalIO.h>
+#include "KeyState.h"
 
 #define KEYS 50
 #define COL_PINS 5
@@ -7,8 +11,6 @@
 
 class Keyboard {
 public:
-	typedef enum{ IDLE, PRESSED, HOLD, RELEASED } KeyState;
-	
 	KeyState keyboardState[KEYS];
 
 	void setup();
@@ -20,6 +22,6 @@ private:
 	DigitalPin<4> column2;
 	DigitalPin<3> column3;
 	DigitalPin<2> column4;
-
-	KeyState getNextState(int pressed, KeyState key);
 };
+
+#endif /* Keyboard_h */

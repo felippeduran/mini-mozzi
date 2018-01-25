@@ -12,14 +12,14 @@ Oscil<SIN2048_NUM_CELLS, AUDIO_RATE> lfo(SIN2048_DATA);
 LowPassFilter lpf;
 uint8_t mix;
 
-void setup() {
-  // put your setup code here, to run once:
-  startMozzi();
-  aSaw.setFreq(110);
-  aSquare.setFreq(659);
-  lfo.setFreq(5);
-  // Serial.begin(9600);
-}
+// void setup() {
+//   // put your setup code here, to run once:
+//   startMozzi();
+//   aSaw.setFreq(440);
+//   aSquare.setFreq(110);
+//   lfo.setFreq(5);
+//   // Serial.begin(9600);
+// }
 
 void updateControl() {
   uint8_t resonance = mozziAnalogRead(0) / 4;
@@ -36,6 +36,6 @@ int updateAudio() {
   return (int8_t)((int16_t)(asig * lfo.next()) >> 8);
 }
 
-void loop() {
-  audioHook();
-}
+// void loop() {
+//   audioHook();
+// }

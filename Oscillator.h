@@ -12,7 +12,6 @@ struct Oscillator {
     Oscillator() : waveform(Saw) {};
 
     typedef enum { Saw, Square, Sine, Triangle, Count } Waveform;
-    int8_t waveformMask[Waveform::Count] = { 1, 2, 4, 8 };
 
     int8_t next();
 

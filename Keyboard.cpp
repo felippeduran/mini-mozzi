@@ -8,10 +8,27 @@ void Keyboard::setup() {
 	column4.mode(INPUT);
 }
 
+void Keyboard::resetStateChanges() {
+	stateChangesSize = 0;
+}
+
 void Keyboard::updateRow(int row) {
-	keyboardState[row * COL_PINS] = getNextState(column0.read(), keyboardState[row * COL_PINS]);
-	keyboardState[row * COL_PINS + 1] = getNextState(column1.read(), keyboardState[row * COL_PINS + 1]);
-	keyboardState[row * COL_PINS + 2] = getNextState(column2.read(), keyboardState[row * COL_PINS + 2]);
-	keyboardState[row * COL_PINS + 3] = getNextState(column3.read(), keyboardState[row * COL_PINS + 3]);
-	keyboardState[row * COL_PINS + 4] = getNextState(column4.read(), keyboardState[row * COL_PINS + 4]);
+	updateKey(row, 0, column0.read());
+	updateKey(row, 1, column1.read());
+	updateKey(row, 2, column2.read());
+	updateKey(row, 3, column3.read());
+	updateKey(row, 4, column4.read());
+}
+
+void Keyboard::updateKey(int row, int column, bool input) {
+	KeyState oldState = keyboardState[row * COL_PINS + column];
+	KeyState newState = getNextState(input, keyboardState[row * COL_PINS + column]);
+	keyboardState[row * COL_PINS + column] = newState;
+	if (oldState != newState) stateChanges[stateChangesSize++] = row * COL_PINS + column;
+}
+
+int8_t Keyboard::getSequentialKeyNumber(int keyIndex) {
+	// (keyIndex % COL_PINS) * ROWS + keyIndex / COL_PINS;
+	// A % B = A - B * (A / B)
+	return ROWS * keyIndex - (COL_PINS * ROWS - 1) * (keyIndex / COL_PINS);
 }

@@ -51,9 +51,8 @@ void setup() {
   oscil3.aSaw.setFreq(653);
   oscil3.aTriangle.setFreq(653);
 
-  // envelope.setADLevels(255, 255);
   envelope.setLevels(255, 255, 255, 255);
-  envelope.setTimes(2000, 2000, 32768, 0);
+  envelope.setTimes(2000, 2000, 65535, 0);
 
   Serial.begin(9600);
 }
@@ -75,7 +74,7 @@ void updateControl() {
       oscil3.setNote(currentNote);
 
       oscil1.updateFrequency();
-      envelope.noteOn();
+      envelope.noteOn(true);
     }
 
     if (state == RELEASED && note == currentNote) {
@@ -113,17 +112,16 @@ void updateState() {
   oscil1.gain = controlPanel.potStates[13] >> 3;
   oscil2.gain = controlPanel.potStates[12] >> 3;
   oscil3.gain = controlPanel.potStates[11] >> 3;
-  // oscil1.detune = controlPanel.potStates[13] >> 3;
+
   oscil2.detune = controlPanel.potStates[15];
   oscil3.detune = controlPanel.potStates[14];
   oscil2.updateFrequency();
   oscil3.updateFrequency();
 
-  envelope.setSustainLevel(controlPanel.potStates[3] >> 3);
-  envelope.setReleaseLevel(controlPanel.potStates[3] >> 3);
-  // envelope.setDecayLevel(controlPanel.potStates[3] >> 3);
-  envelope.setAttackTime(controlPanel.potStates[8]);
-  envelope.setDecayTime(controlPanel.potStates[5]);
+  envelope.setSustainLevel(controlPanel.potStates[3] >> 2);
+  envelope.setReleaseLevel(controlPanel.potStates[3] >> 2);
+  envelope.setAttackTime(2 * controlPanel.potStates[8] + 20);
+  envelope.setDecayTime(2 * controlPanel.potStates[5] + 20);
 }
 
 int updateAudio() {

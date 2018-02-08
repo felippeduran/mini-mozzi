@@ -68,18 +68,26 @@ void updateControl() {
     int8_t note = keyboard.getSequentialKeyNumber(noteIndex);
 
     if (state == PRESSED && note < currentNote) {
+      envelope.noteOn(currentNote == 50);
+      filterEnvelope.noteOn(currentNote == 50);
       currentNote = note;
       oscil1.setNote(currentNote);
       oscil2.setNote(currentNote);
       oscil3.setNote(currentNote);
 
       oscil1.updateFrequency();
-      envelope.noteOn(true);
     }
 
     if (state == RELEASED && note == currentNote) {
-      currentNote = 50;
-      envelope.noteOff();
+      currentNote = keyboard.getLowestPressedKey();
+      if (currentNote == 50) {
+        envelope.noteOff();
+      } else {
+        oscil1.setNote(currentNote);
+        oscil2.setNote(currentNote);
+        oscil3.setNote(currentNote);
+        oscil1.updateFrequency();
+      }
     }
   }
 

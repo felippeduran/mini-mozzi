@@ -27,6 +27,18 @@ void Keyboard::updateKey(int row, int column, bool input) {
 	if (oldState != newState) stateChanges[stateChangesSize++] = row * COL_PINS + column;
 }
 
+int8_t Keyboard::getLowestPressedKey() {
+	int8_t lowestKey = 50;
+	for (int i = 0; i < KEYS; i++) {
+		KeyState state = keyboardState[i];
+		if (state == PRESSED || state == HOLD) {
+			lowestKey = getSequentialKeyNumber(i);
+			break;
+		}
+	}
+	return lowestKey;
+}
+
 int8_t Keyboard::getSequentialKeyNumber(int keyIndex) {
 	// (keyIndex % COL_PINS) * ROWS + keyIndex / COL_PINS;
 	// A % B = A - B * (A / B)

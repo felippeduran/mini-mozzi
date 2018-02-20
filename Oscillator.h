@@ -12,14 +12,14 @@ struct Oscillator {
     Oscillator() : waveform(Saw) {}; //193.55698098
 
     typedef enum { Saw, Square, Sine, Triangle, WaveCount } Waveform;
-    typedef enum { Two, Four, Eight, Sixteen, ThirthyTwo, RangeCount } Range;
+    typedef enum { Two, Four, Eight, Sixteen, ThirthyTwo, SixtyFour, HundredTwentyEight, RangeCount } Range;
 
     int8_t next();
     void updateFrequency();
 
     void setNote(int8_t note);
 
-    int8_t rangeModifier[5] = { 89, 77, 65, 53, 41 };
+    int8_t rangeModifier[8] = { 89, 77, 65, 53, 41, 29, 17 };
 
     Waveform waveform;
     Range range = 4;

@@ -117,9 +117,9 @@ void updateState() {
   oscil1.enabled = controlPanel.switchStates[6];
   oscil2.enabled = controlPanel.switchStates[5];
   oscil3.enabled = controlPanel.switchStates[4];
-  oscil1.gain = controlPanel.potStates[13] >> 3;
-  oscil2.gain = controlPanel.potStates[12] >> 3;
-  oscil3.gain = controlPanel.potStates[11] >> 3;
+  oscil1.gain = controlPanel.potStates[13] >> 2;
+  oscil2.gain = controlPanel.potStates[12] >> 2;
+  oscil3.gain = controlPanel.potStates[11] >> 2;
 
   oscil2.detune = controlPanel.potStates[15];
   oscil3.detune = controlPanel.potStates[14];

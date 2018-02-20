@@ -21,7 +21,7 @@ int8_t Oscillator::next() {
     }
   }
 
-	return ((int16_t)gain * signal) >> 7;
+	return ((uint16_t)gain * signal) >> 8;
 }
 
 void Oscillator::updateFrequency() {

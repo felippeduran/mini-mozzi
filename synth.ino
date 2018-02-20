@@ -21,6 +21,7 @@ Oscillator oscil3;
 LowPassFilter lpf;
 
 ADSR<CONTROL_RATE, AUDIO_RATE> envelope;
+ADSR<CONTROL_RATE, CONTROL_RATE> filterEnvelope;
 
 int8_t currentNote = 99;
 
@@ -54,7 +55,10 @@ void setup() {
   envelope.setLevels(255, 255, 255, 255);
   envelope.setTimes(2000, 2000, 65535, 0);
 
-  Serial.begin(9600);
+  filterEnvelope.setLevels(255, 255, 255, 255);
+  filterEnvelope.setTimes(2000, 2000, 65535, 0);
+
+  // Serial.begin(9600);
 }
 
 void updateControl() {
@@ -82,6 +86,7 @@ void updateControl() {
       currentNote = keyboard.getLowestPressedKey();
       if (currentNote == 50) {
         envelope.noteOff();
+        filterEnvelope.noteOff();
       } else {
         oscil1.setNote(currentNote);
         oscil2.setNote(currentNote);
@@ -92,6 +97,7 @@ void updateControl() {
   }
 
   envelope.update();
+  filterEnvelope.update();
 }
 
 void updateParameters() {
@@ -130,6 +136,18 @@ void updateState() {
   envelope.setReleaseLevel(controlPanel.potStates[3] >> 2);
   envelope.setAttackTime(2 * controlPanel.potStates[8] + 20);
   envelope.setDecayTime(2 * controlPanel.potStates[5] + 20);
+
+  filterEnvelope.setSustainLevel(controlPanel.potStates[4] >> 2);
+  filterEnvelope.setReleaseLevel(controlPanel.potStates[4] >> 2);
+  filterEnvelope.setAttackTime(2 * controlPanel.potStates[9] + 20);
+  filterEnvelope.setDecayTime(2 * controlPanel.potStates[6] + 20);
+
+  uint8_t value = filterEnvelope.next();
+  lpf.setResonance(controlPanel.potStates[7] >> 2);
+  lpf.setCutoffFreq(((uint16_t)(controlPanel.potStates[10] >> 2) * value) >> 8);
+
+  // lpf.setResonance(controlPanel.potStates[7] >> 2);
+  // lpf.setCutoffFreq(controlPanel.potStates[10] >> 2);
 }
 
 int updateAudio() {
@@ -139,6 +157,8 @@ int updateAudio() {
   if (oscillatorsEnabled == 3) signal = signal / 3;
 
   signal = (signal * envelope.next()) >> 8;
+
+  signal = lpf.next(signal);
 
   return signal << 6;
 

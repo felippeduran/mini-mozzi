@@ -46,7 +46,7 @@ void setup() {
 
 void updateControl() {
   keyboard.resetStateChanges();
-  updateParameters();
+  updateControlInputs();
   updateState();
 
   for (int i = 0; i < keyboard.stateChangesSize; i++) {
@@ -58,11 +58,6 @@ void updateControl() {
       envelope.noteOn(currentNote == 50);
       filterEnvelope.noteOn(currentNote == 50);
       currentNote = note;
-      oscil1.setNote(currentNote);
-      oscil2.setNote(currentNote);
-      oscil3.setNote(currentNote);
-
-      oscil1.updateFrequency();
     }
 
     if (state == RELEASED && note == currentNote) {
@@ -70,20 +65,25 @@ void updateControl() {
       if (currentNote == 50) {
         envelope.noteOff();
         filterEnvelope.noteOff();
-      } else {
-        oscil1.setNote(currentNote);
-        oscil2.setNote(currentNote);
-        oscil3.setNote(currentNote);
-        oscil1.updateFrequency();
       }
     }
+  }
+
+  if (currentNote < 50) {
+    oscil1.setNote(currentNote);
+    oscil2.setNote(currentNote);
+    oscil3.setNote(currentNote);
+
+    oscil1.updateFrequency();
+    oscil2.updateFrequency();
+    oscil3.updateFrequency();
   }
 
   envelope.update();
   filterEnvelope.update();
 }
 
-void updateParameters() {
+void updateControlInputs() {
   for (int i = 0; i < ROWS; i++) {
     keyboard.updateRow(i);
 
@@ -112,8 +112,6 @@ void updateState() {
 
   oscil2.detune = controlPanel.potStates[15];
   oscil3.detune = controlPanel.potStates[14];
-  oscil2.updateFrequency();
-  oscil3.updateFrequency();
 
   envelope.setSustainLevel(controlPanel.potStates[3] >> 2);
   envelope.setDecayLevel(controlPanel.potStates[3] >> 2);

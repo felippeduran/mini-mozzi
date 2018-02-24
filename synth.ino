@@ -37,10 +37,10 @@ void setup() {
 
   startMozzi();
 
-  envelope.setLevels(255, 255, 255, 255);
+  envelope.setLevels(255, 255, 255, 0);
   envelope.setTimes(2000, 2000, 65535, 0);
 
-  filterEnvelope.setLevels(255, 255, 255, 255);
+  filterEnvelope.setLevels(255, 255, 255, 0);
   filterEnvelope.setTimes(2000, 2000, 65535, 0);
 }
 
@@ -116,12 +116,12 @@ void updateState() {
   oscil3.updateFrequency();
 
   envelope.setSustainLevel(controlPanel.potStates[3] >> 2);
-  envelope.setReleaseLevel(controlPanel.potStates[3] >> 2);
+  envelope.setDecayLevel(controlPanel.potStates[3] >> 2);
   envelope.setAttackTime(2 * controlPanel.potStates[8] + 20);
   envelope.setDecayTime(2 * controlPanel.potStates[5] + 20);
 
   filterEnvelope.setSustainLevel(controlPanel.potStates[4] >> 2);
-  filterEnvelope.setReleaseLevel(controlPanel.potStates[4] >> 2);
+  filterEnvelope.setDecayLevel(controlPanel.potStates[4] >> 2);
   filterEnvelope.setAttackTime(2 * controlPanel.potStates[9] + 20);
   filterEnvelope.setDecayTime(2 * controlPanel.potStates[6] + 20);
 

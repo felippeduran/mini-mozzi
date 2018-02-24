@@ -125,17 +125,26 @@ void updateState() {
 
   uint8_t value = filterEnvelope.next();
   lpf.setResonance(controlPanel.potStates[7] >> 2);
-  lpf.setCutoffFreq(((uint16_t)(controlPanel.potStates[10] >> 2) * value) >> 8);
-
-  // lpf.setResonance(controlPanel.potStates[7] >> 2);
-  // lpf.setCutoffFreq(controlPanel.potStates[10] >> 2);
+  if (!controlPanel.switchStates[7]) lpf.setCutoffFreq(((uint16_t)(controlPanel.potStates[10] >> 2) * value) >> 8);
 }
 
 int updateAudio() {
-  int16_t signal = (int16_t)oscil1.next() + (int16_t)oscil2.next() + (int16_t)oscil3.next();
+  int16_t signal = (int16_t)oscil1.next() + (int16_t)oscil2.next();
+  int16_t oscil3Signal = oscil3.next();
+  bool freqMod = controlPanel.switchStates[3];
+  if (oscil3.enabled) {
+    if (freqMod) {
+      signal = (signal * oscil3Signal) >> 8;
+    } else {
+      signal += oscil3Signal;
+    }
+  }
+
+  if (controlPanel.switchStates[7]) lpf.setCutoffFreq(oscil3Signal);
+
   int oscillatorsEnabled = oscil1.enabled + oscil2.enabled + oscil3.enabled;
-  if (oscillatorsEnabled == 2) signal = signal >> 1;
-  if (oscillatorsEnabled == 3) signal = signal / 3;
+  if (oscillatorsEnabled == 3 && !freqMod) signal = signal / 3;
+  else if (oscillatorsEnabled == 2 && ((oscil3.enabled && !freqMod) || !oscil3.enabled)) signal = signal >> 1;
 
   signal = (signal * envelope.next()) >> 8;
 
